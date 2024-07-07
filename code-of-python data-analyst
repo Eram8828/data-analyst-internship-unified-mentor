@@ -1,0 +1,406 @@
+# python ,data-visualisation,seaborn,matplolib,pandas,numpy
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Step 1: Extract
+# Load the dataset
+df = pd.read_csv('Amazon Sales data.csv')
+df
+df['Order Date'] = pd.to_datetime(df['Order Date'])
+df['Ship Date'] = pd.to_datetime(df['Ship Date'])
+
+df['Year'] = df['Order Date'].dt.year
+df['Month'] = df['Order Date'].dt.month
+df['Year-Month'] = df['Order Date'].dt.to_period('M')
+month_wise_sales = df.groupby('Month')['Total Revenue'].sum()
+print("Month-wise Sales Trend:\n", month_wise_sales)
+
+# Year-wise Sales Trend
+year_wise_sales = df.groupby('Year')['Total Revenue'].sum()
+print("Year-wise Sales Trend:\n", year_wise_sales)
+
+# Yearly Month-wise Sales Trend
+year_month_wise_sales = df.groupby('Year-Month')['Total Revenue'].sum()
+print("Yearly Month-wise Sales Trend:\n", year_month_wise_sales)
+item_type_sales = df.groupby('Item Type')['Total Revenue'].sum().sort_values(ascending=False)
+print("Total Sales by Item Type:\n", item_type_sales)
+
+# Units Sold by Region
+region_units_sold = df.groupby('Region')['Units Sold'].sum().sort_values(ascending=False)
+print("Units Sold by Region:\n", region_units_sold) 
+average_order_value = df['Total Revenue'].mean()
+print(f'Average Order Value: {average_order_value}')
+
+# Shipping Duration Analysis
+df['Shipping Duration'] = (df['Ship Date'] - df['Order Date']).dt.days
+shipping_duration_stats = df['Shipping Duration'].describe()
+print("Shipping Duration Statistics:\n", shipping_duration_stats)
+# Relationships Between Attributes
+# Correlation Matrix
+correlation_matrix = df[['Units Sold', 'Unit Price', 'Total Revenue', 'Total Cost', 'Total Profit', 'Shipping Duration']].corr()
+print("Correlation Matrix:\n", correlation_matrix)
+
+# Sales vs. Shipping Duration
+sns.scatterplot(data=df, x='Shipping Duration', y='Total Revenue')
+plt.title('Total Revenue vs. Shipping Duration')
+plt.show()
+# Step 5: Visualize
+# Month-wise Sales Trend
+month_wise_sales.plot(kind='bar', title='Month-wise Sales Trend')
+plt.xlabel('Month')
+plt.ylabel('Total Revenue')
+plt.show()
+year_wise_sales.plot(kind='line', title='Year-wise Sales Trend')
+plt.xlabel('Year')
+plt.ylabel('Total Revenue')
+plt.show()
+year_month_wise_sales.plot(kind='line', title='Yearly Month-wise Sales Trend')
+plt.xlabel('Year-Month')
+plt.ylabel('Total Revenue')
+plt.show()
+item_type_sales.plot(kind='pie', title='Total Sales by Item Type')
+plt.xlabel('Item Type')
+plt.ylabel('Total Revenue')
+plt.show()
+# Units Sold by Region
+region_units_sold.plot(kind='pie', title='Units Sold by Region')
+plt.xlabel('Region')
+plt.ylabel('Units Sold')
+plt.show()
+month_wise_sales.plot(kind='barh', title='Month-wise Sales Trend').get_figure().savefig('month_wise_sales.png')
+
+year_wise_sales.plot(kind='pie', title='Year-wise Sales Trend').get_figure().savefig('year_wise_sales.png')
+year_month_wise_sales.plot(kind='area', title='Yearly Month-wise Sales Trend').get_figure().savefig('year_month_wise_sales.png')
+
+
+item_type_sales.plot(kind='box', title='Total Sales by Item Type').get_figure().savefig('item_type_sales.png')
+region_units_sold.plot(kind='barh', title='Units Sold by Region').get_figure().savefig('region_units_sold.png')
+
+item_type_sales.plot(kind='bar', title='Total Sales by Item Type').get_figure().savefig('item_type_sales.png')
+sns.pairplot(df,hue="Order Priority",palette="GnBu")
+plt.show()
+#FIFA
+import pandas as pd
+
+# Load the datasets
+world_cups_df = pd.read_csv('WorldCups.csv') 
+world_cups_df
+
+# Display the first few rows of each dataset to understand their structure
+world_cup_matches_df = pd.read_csv('WorldCupMatches.csv') 
+world_cup_matches_df 
+
+world_cup_players_df = pd.read_csv('WorldCupPlayers.csv')
+world_cup_players_df
+# Cleaning the data: Checking for missing values and data types
+
+# WorldCups Dataset
+world_cups_df.info()
+print("\nMissing values in WorldCups dataset:\n", world_cups_df.isnull().sum())
+
+# WorldCupMatches Dataset
+world_cup_matches_df.info()
+print("\nMissing values in WorldCupMatches dataset:\n", world_cup_matches_df.isnull().sum())
+
+# WorldCupPlayers Dataset
+world_cup_players_df.info()
+print("\nMissing values in WorldCupPlayers dataset:\n", world_cup_players_df.isnull().sum())
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+# Check for missing values
+print(world_cups_df.isnull().sum())
+
+# For simplicity, let's fill any missing numeric values with 0 and categorical values with 'Unknown'
+world_cups_df.fillna({'Winner': 'Unknown', 'Runners-Up': 'Unknown', 'Third': 'Unknown', 'Fourth': 'Unknown'}, inplace=True)
+world_cups_df.fillna(0, inplace=True)
+print(world_cup_players_df.isnull().sum())
+
+# For simplicity, let's fill any missing numeric values with 0 and categorical values with 'Unknown'
+world_cup_players_df.fillna({'Winner': 'Unknown', 'Runners-Up': 'Unknown', 'Third': 'Unknown', 'Fourth': 'Unknown'}, inplace=True)
+world_cup_players_df.fillna(0, inplace=True)
+print(world_cup_matches_df .isnull().sum())
+
+# For simplicity, let's fill any missing numeric values with 0 and categorical values with 'Unknown'
+world_cup_matches_df .fillna({'Winner': 'Unknown', 'Runners-Up': 'Unknown', 'Third': 'Unknown', 'Fourth': 'Unknown'}, inplace=True)
+world_cup_matches_df .fillna(0, inplace=True)
+plt.figure(figsize=(12, 6))
+sns.lineplot(data=world_cups_df, x='Year', y='GoalsScored', marker='o')
+sns.lineplot(data=world_cups_df, x='Year', y='GoalsScored', hue='Third',marker='o',palette='spring')
+
+plt.title('Total Goals Scored Over the Years')
+plt.xlabel('Year')
+plt.ylabel('Goals Scored')
+plt.grid(True)
+plt.show()
+# world_cups_df
+# world_cup_matches_df
+# world_cup_players_df
+plt.figure(figsize=(12, 6))
+sns.barplot(data=world_cups_df, x='Year', y='Attendance')
+plt.title('Average Attendance Over the Years')
+plt.xlabel('Year')
+plt.ylabel('Attendance')
+plt.xticks(rotation=45)
+plt.show()
+# world_cups_df
+# world_cup_matches_df
+# world_cup_players_df
+plt.figure(figsize=(12, 6))
+sns.barplot(data= world_cup_matches_df, x='Year', y='Attendance')
+plt.title('Average Attendance Over the Years')
+plt.xlabel('Year')
+plt.ylabel('Attendance')
+plt.xticks(rotation=45)
+plt.show()
+# world_cups_df
+# world_cup_matches_df
+# world_cup_players_df 
+plt.figure(figsize=(12, 6))
+sns.lineplot(data=world_cups_df, x='Year', y='GoalsScored', marker='o')
+sns.lineplot(data=world_cups_df, x='Year', y='GoalsScored', hue='Runners-Up',marker='o',palette='dark')
+
+plt.title('Total Goals Scored Over the Years')
+plt.xlabel('Year')
+plt.ylabel('Goals Scored')
+plt.grid(True)
+plt.show()
+# world_cups_df
+# world_cup_matches_df
+# world_cup_players_df  
+plt.figure(figsize=(12, 6))
+sns.lineplot(data=world_cups_df, x='Year', y='QualifiedTeams', marker='o', color='green')
+plt.title('Number of Qualified Teams Over the Years')
+plt.xlabel('Year')
+plt.ylabel('Qualified Teams')
+plt.grid(True)
+plt.show()
+plt.figure(figsize=(12, 6))
+sns.countplot(data=world_cups_df, x='Winner', palette='dark',order=world_cups_df['Winner'].value_counts().index)
+plt.title('Number of Wins by Country')
+plt.xlabel('Country')
+plt.ylabel('Number of Wins')
+plt.xticks(rotation=90)
+plt.show()
+# world_cups_df
+# world_cup_matches_df
+# world_cup_players_df
+plt.figure(figsize=(12, 6))
+sns.countplot(data=world_cups_df, x='Runners-Up', palette='bright',order=world_cups_df['Runners-Up'].value_counts().index)
+plt.title('Number of Times Runners-Up by Country')
+plt.xlabel('Country')
+plt.ylabel('Number of Runners-Up') 
+plt.xticks(rotation=90) 
+plt.show()
+# world_cups_df
+# world_cup_matches_df
+# world_cup_players_df
+def create_dashboard(df):
+    plt.figure(figsize=(20, 18))
+    
+    # Total Goals Scored Over the Years
+    plt.subplot(3, 2, 1)
+    sns.lineplot(data=world_cups_df, x='Year', y='GoalsScored', marker='o')
+    plt.title('Total Goals Scored Over the Years')
+    plt.xlabel('Year')
+    plt.ylabel('Goals Scored')
+    plt.grid(True)
+    
+    # Average Attendance Over the Years
+    plt.subplot(3, 2, 2)
+    sns.barplot(data=world_cups_df, x='Year', y='Attendance')
+    plt.title('Average Attendance Over the Years')
+    plt.xlabel('Year')
+    plt.ylabel('Attendance')
+    plt.xticks(rotation=45)
+    
+    # Number of Qualified Teams Over the Years
+    plt.subplot(3, 2, 3)
+    sns.lineplot(data=world_cups_df, x='Year', y='QualifiedTeams', marker='o', color='green')
+    plt.title('Number of Qualified Teams Over the Years')
+    plt.xlabel('Year')
+    plt.ylabel('Qualified Teams')
+    plt.grid(True)
+    
+    # Winners Over the Years
+    plt.subplot(3, 2, 4)
+    sns.countplot(data=world_cups_df, x='Winner', order=world_cups_df['Winner'].value_counts().index)
+    plt.title('Number of Wins by Country')
+    plt.xlabel('Country')
+    plt.ylabel('Number of Wins')
+    plt.xticks(rotation=90)
+    
+    # Runners-Up Over the Years
+    plt.subplot(3, 2, 5)
+    sns.countplot(data=world_cups_df, x='Runners-Up', order=world_cups_df['Runners-Up'].value_counts().index)
+    plt.title('Number of Times Runners-Up by Country')
+    plt.xlabel('Country')
+    plt.ylabel('Number of Runners-Up')
+    plt.xticks(rotation=90)
+    
+    plt.tight_layout()
+    plt.show()
+
+# Call the function to create the dashboard
+create_dashboard(world_cups_df)
+import pandas as pd
+df=pd.read_csv("Crop Production data.csv")
+df
+import matplotlib.pyplot as plt
+import seaborn as sns
+# Bar chart: Total production by state
+plt.figure(figsize=(10, 6))
+total_production_by_state = df.groupby('State_Name')['Production'].sum().reset_index()
+sns.barplot(x='State_Name', y='Production', data=total_production_by_state)
+plt.xticks(rotation=90)
+plt.title('Total Production by State')
+plt.show()
+
+# Line chart: Production trend over the years for different crops
+plt.figure(figsize=(14, 8))
+production_trend = df.groupby(['Crop_Year', 'Crop'])['Production'].sum().reset_index()
+sns.lineplot(x='Crop_Year', y='Production', hue='Crop', data=production_trend)
+plt.title('Production Trend Over the Years')
+plt.show()
+
+# Scatter plot: Area vs Production for different crops
+plt.figure(figsize=(10, 6))
+sns.scatterplot(x='Area', y='Production', hue='Crop', data=df)
+plt.title('Area vs Production for Different Crops')
+plt.show()
+
+
+import pandas as pd
+df=pd.read_csv("Crop Production data.csv")
+df
+
+gp=df.groupby("Season").agg({"Area":"mean"})
+sns.heatmap(gp) 
+
+import pandas as pd
+df=pd.read_csv("Crop Production data.csv")
+df
+gp=df.groupby("Crop_Year").agg({"Production":"mean"})
+sns.heatmap(gp)
+import matplotlib.pyplot as plt
+import seaborn as sns
+# Bar chart: Total production by state
+plt.figure(figsize=(10, 6))
+total_production_by_state = df.groupby('State_Name')['Production'].sum().reset_index()
+sns.barplot(x='State_Name', y='Production',data=total_production_by_state,palette="bright")
+plt.xticks(rotation=90)
+plt.title('Total Production by State')
+plt.show()
+
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Load the data
+df = pd.read_csv("Crop Production data.csv")
+
+# Group the data by District_Name and sum the Production
+total_production_by_district = df.groupby('District_Name')['Production'].sum().reset_index()
+
+# Sort the districts by total production in descending order and select the top 10
+top_districts = total_production_by_district.sort_values(by='Production', ascending=False).head(10)
+
+# Plot the horizontal bar chart
+plt.figure(figsize=(12, 8))
+sns.barplot(y='District_Name', x='Production', data=top_districts, palette='viridis')
+
+plt.title('Total Production by Top 10 Districts', fontsize=16)
+plt.xlabel('Total Production', fontsize=14)
+plt.ylabel('District', fontsize=14)
+
+# Add data labels to bars
+for index, value in enumerate(top_districts['Production']):
+    plt.text(value, index, f'{value:,.0f}', va='center', fontsize=10)
+
+plt.tight_layout()
+plt.show()
+
+
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Load the data
+df = pd.read_csv("Crop Production data.csv")
+
+# Group the data by State_Name and Season, summing the Production
+production_by_state_season = df.groupby(['State_Name', 'Season'])['Production'].sum().unstack().fillna(0)
+
+# Plot the stacked bar chart
+production_by_state_season.plot(kind='bar', stacked=True, figsize=(12, 8), colormap='tab20')
+
+plt.xticks(rotation=90)
+plt.title('Total Production by State and Season')
+plt.xlabel('State')
+plt.ylabel('Total Production')
+plt.legend(title='Season', bbox_to_anchor=(1.05, 1), loc='upper left')
+plt.tight_layout()
+plt.show()
+
+#State_Name	District_Name	Crop_Year	Season	Crop	Area	Production
+plt.figure(figsize=(12, 10))
+bars = plt.barh(top_crops['Crop'], top_crops['Production'], color=plt.cm.tab20.colors[:len(top_crops)], edgecolor='black')
+plt.title('Total Production by Top 10 Crops', fontsize=16)
+plt.xlabel('Total Production', fontsize=14)
+plt.ylabel('Crop', fontsize=14)
+plt.xticks(fontsize=12)
+plt.yticks(fontsize=12)
+plt.tight_layout()
+
+for bar in bars:
+    plt.text(bar.get_width() + 0.05, bar.get_y() + bar.get_height()/2, f'{bar.get_width():,.0f}', va='center', fontsize=10)
+
+plt.show()
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Load the data
+df = pd.read_csv("Crop Production data.csv")
+
+# Group the data by District_Name and sum the Production
+total_production_by_district = df.groupby('District_Name')['Production'].sum().reset_index()
+
+# Sort the districts by total production in descending order and select the top 10
+top_districts = total_production_by_district.sort_values(by='Production', ascending=False).head(10)
+
+# Define Set3 colors for the pie chart
+colors = plt.cm.Set3(range(len(top_districts)))  # Using Set3 colormap for pastel colors
+
+# Plot the pie chart for the top 10 districts
+plt.figure(figsize=(10, 10))
+plt.pie(top_districts['Production'], labels=top_districts['District_Name'], autopct='%1.1f%%', startangle=140, colors=colors, wedgeprops={'edgecolor': 'black'})
+
+plt.title('Total Production by Top 10 Districts')
+plt.tight_layout()
+plt.show()
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Load the data
+df = pd.read_csv("Crop Production data.csv")
+
+# Group the data by Crop_Year and Crop, summing the Production
+production_trend = df.groupby(['Crop_Year', 'Crop'])['Production'].sum().reset_index()
+
+# Create a FacetGrid with line plots for each crop
+g = sns.FacetGrid(production_trend, col="Crop", col_wrap=4, sharex=True, sharey=True, height=4, aspect=1.5, col_order=production_trend['Crop'].unique())
+g.map_dataframe(sns.lineplot, x='Crop_Year', y='Production', marker='o', color='blue')
+g.set_titles("{col_name}")
+g.set_axis_labels('Year', 'Total Production')
+g.set_titles(col_template="{col_name}", row_template="{row_name}")
+g.add_legend(title='Crop', title_fontsize='13', fontsize='11', bbox_to_anchor=(1.05, 1), loc='upper left', frameon=True, shadow=True, borderpad=1)
+
+plt.suptitle('Production Trend Over the Years by Crop', fontsize=20, y=1.02)
+plt.xticks(rotation=45, fontsize=12)
+plt.yticks(fontsize=12)
+
+plt.tight_layout()
+plt.show()
